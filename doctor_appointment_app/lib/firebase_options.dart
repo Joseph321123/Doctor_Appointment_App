@@ -83,4 +83,5 @@ class DefaultFirebaseOptions {
     authDomain: 'doctorappointmentapp-a61ef.firebaseapp.com',
     storageBucket: 'doctorappointmentapp-a61ef.firebasestorage.app',
   );
+
 }
