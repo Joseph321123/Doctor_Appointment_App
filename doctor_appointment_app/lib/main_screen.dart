@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'home_page.dart';
 import 'messages_page.dart';
 import 'settings_page.dart';
+import 'citas_page.dart';
 
 // MainScreen es un widget con estado porque cambiará de contenido cuando el usuario toque las pestañas
 class MainScreen extends StatefulWidget {
@@ -21,6 +22,7 @@ class _MainScreenState extends State<MainScreen> {
     HomePage(), // Página principal (inicio)
     MessagesPage(), // Página de mensajes
     SettingsPage(), // Página de configuración
+    CitasPage(), // Pagina de citas
   ];
 
   @override
@@ -29,7 +31,7 @@ class _MainScreenState extends State<MainScreen> {
       // Muestra la página correspondiente al índice seleccionado
       body: _pages[_selectedIndex],
 
-      // Barra de navegación inferior con 3 elementos
+      // Barra de navegación inferior con 4 elementos
       bottomNavigationBar: BottomNavigationBar(
         // Índice actualmente seleccionado
         currentIndex: _selectedIndex,
@@ -37,6 +39,10 @@ class _MainScreenState extends State<MainScreen> {
         // Función que se ejecuta cuando el usuario toca una opción
         onTap: (index) => setState(() => _selectedIndex = index),
 
+        backgroundColor: Colors.blue, // Color de fondo de la barra
+        selectedItemColor: Colors.white, // Ícono y texto seleccionados
+        unselectedItemColor: Colors.black, // Ícono y texto no seleccionados
+        type: BottomNavigationBarType.fixed, // Evita animaciones raras
         // Lista de elementos (íconos y etiquetas) de la barra inferior
         items: const [
           BottomNavigationBarItem(
@@ -50,6 +56,10 @@ class _MainScreenState extends State<MainScreen> {
           BottomNavigationBarItem(
             icon: Icon(Icons.settings), // Ícono de configuración
             label: 'Configuración', // Texto debajo del ícono
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.calendar_month), // Ícono de citas
+            label: 'Citas', // Texto debajo del ícono
           ),
         ],
       ),
