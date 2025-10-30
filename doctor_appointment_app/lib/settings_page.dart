@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'info_page.dart';
 import 'routes.dart';
+import 'profile_page.dart';
 
 // Widget sin estado porque la pantalla de configuración no cambia dinámicamente
 class SettingsPage extends StatelessWidget {
@@ -27,8 +28,9 @@ class SettingsPage extends StatelessWidget {
             leading: const Icon(Icons.person), // Ícono de usuario
             title: const Text("Perfil"), // Título del item
             onTap: () {
-              // Navega a la pantalla de perfil usando las rutas definidas
-              Navigator.pushNamed(context, Routes.profile);
+              Navigator.of(
+                context,
+              ).push(MaterialPageRoute(builder: (_) => ProfilePage()));
             },
           ),
 

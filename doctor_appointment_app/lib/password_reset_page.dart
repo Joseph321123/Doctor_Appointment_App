@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart'; // Importa el paquete de Flutter para crear la interfaz grafica de la app
 import 'package:firebase_auth/firebase_auth.dart'; // Importa el paquete de Firebase Authentication para manejar la autenticacion
+import 'routes.dart';
 
 // Esta es la clase que representa la pantalla de recuperacion de contraseña.
 class PasswordResetPage extends StatefulWidget {
@@ -59,6 +60,16 @@ class _PasswordResetPageState extends State<PasswordResetPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Recuperar Contraseña"),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              Routes.login, // navega a la ruta del login
+              (route) => false, // elimina el historial de navegación
+            );
+          },
+        ),
       ), // Barra de navegacion con el titulo "Recuperar Contraseña"
       body: Padding(
         padding: const EdgeInsets.all(16.0), // Añadimos un padding (margen)

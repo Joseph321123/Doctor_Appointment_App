@@ -1,6 +1,7 @@
 // register_page.dart
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'routes.dart';
 
 class RegisterPage extends StatefulWidget {
   @override
@@ -22,7 +23,20 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       // Barra superior de la aplicacion con el titulo.
-      appBar: AppBar(title: const Text("Crear una nueva cuenta")),
+      appBar: AppBar(
+        title: const Text("Crear una nueva cuenta"),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            // 👇 Regresa a la pantalla de login y limpia el historial
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              Routes.login,
+              (route) => false,
+            );
+          },
+        ),
+      ),
 
       // Cuerpo de la pantalla que contiene el formulario.
       body: Padding(

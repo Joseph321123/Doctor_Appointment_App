@@ -16,7 +16,10 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("DoctorAppointmentApp")),
+      appBar: AppBar(
+        title: const Text("DoctorAppointmentApp"),
+        automaticallyImplyLeading: false, // Esto quita la flecha de retroceso
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
