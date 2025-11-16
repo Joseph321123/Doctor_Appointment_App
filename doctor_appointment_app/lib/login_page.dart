@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'routes.dart';
+import 'dashboard_page.dart';
+import 'main_screen.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -12,6 +15,15 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  // Función para obtener el rol del usuario actual desde Firestore
+  Future<String> getUserRole(String uid) async {
+    final doc = await FirebaseFirestore.instance
+        .collection('usuarios')
+        .doc(uid)
+        .get();
+    return doc['rol'] ?? 'Paciente';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -86,7 +98,7 @@ class _LoginPageState extends State<LoginPage> {
 
               //Si la valida el correo y la contraseña y
               //dice el correo y bienvenido, ademas
-              //redirige a home
+              //redirige a la pantalla correspondiente según el rol
               ElevatedButton(
                 onPressed: () async {
                   if (_formKey.currentState!.validate()) {
@@ -96,6 +108,7 @@ class _LoginPageState extends State<LoginPage> {
                             email: emailController.text.trim(),
                             password: passwordController.text.trim(),
                           );
+
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(
@@ -103,7 +116,24 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                         ),
                       );
-                      Navigator.pushReplacementNamed(context, Routes.main);
+
+                      // Obtener rol del usuario
+                      final role = await getUserRole(userCredential.user!.uid);
+
+                      // Redirigir según rol
+                      if (role == 'Médico') {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const DashboardPage(),
+                          ),
+                        );
+                      } else {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (_) => const MainScreen()),
+                        );
+                      }
                     } on FirebaseAuthException catch (e) {
                       String message = "";
                       if (e.code == 'user-not-found') {

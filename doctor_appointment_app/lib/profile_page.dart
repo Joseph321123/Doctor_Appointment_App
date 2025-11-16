@@ -20,15 +20,12 @@ class _ProfilePageState extends State<ProfilePage> {
   final TextEditingController enfermedadesController = TextEditingController();
 
   bool _loading = false;
-  //_loading es un interruptor visual:
-  //true mueestra un "cargando..." y bloquea la UI
-  //flase muestra la pantalla normal
 
   @override
   void initState() {
     super.initState();
     _loadUserData();
-  } // aqui creamos la clase que cargara los datos del usuario al iniciar
+  }
 
   //cargar datos del usuario desde firestore
   Future<void> _loadUserData() async {
@@ -40,8 +37,7 @@ class _ProfilePageState extends State<ProfilePage> {
       final data = doc.data()!;
       nombreController.text = data['nombre'] ?? '';
       telefonoController.text = data['telefono'] ?? '';
-      enfermedadesController.text =
-          data['enfermedades'] ?? ''; //(antes historial medico)
+      enfermedadesController.text = data['enfermedades'] ?? '';
     }
   }
 
@@ -52,13 +48,22 @@ class _ProfilePageState extends State<ProfilePage> {
 
     setState(() => _loading = true);
 
-    await _firestore.collection('usuarios').doc(user.uid).set({
+    final docRef = _firestore.collection('usuarios').doc(user.uid);
+    final doc = await docRef.get();
+
+    // Si ya existe el rol, lo mantenemos, si no, asignamos "Paciente"
+    String role = 'Paciente';
+    if (doc.exists && doc.data()!.containsKey('rol')) {
+      role = doc['rol'];
+    }
+
+    await docRef.set({
       'nombre': nombreController.text.trim(),
       'telefono': telefonoController.text.trim(),
-      'enfermedades': enfermedadesController.text
-          .trim(), // (antes historial medico)
+      'enfermedades': enfermedadesController.text.trim(),
       'email': user.email,
       'uid': user.uid,
+      'rol': role, // Aquí se asigna el rol
     });
 
     setState(() => _loading = false);
