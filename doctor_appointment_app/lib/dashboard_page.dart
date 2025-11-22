@@ -2,8 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-// Importa estadísticas
-import 'citas_stats_chart.dart';
+// Importar la pantalla de gráficas
+import 'graphics_page.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -48,17 +48,17 @@ class _DashboardPageState extends State<DashboardPage> {
           body: Padding(
             padding: const EdgeInsets.all(16.0),
             child: SingleChildScrollView(
-              // Asegura scroll si el contenido es largo
               child: Column(
                 children: [
-                  // Indicadores existentes
+                  // INDICADORES
                   StreamBuilder<QuerySnapshot>(
                     stream: FirebaseFirestore.instance
                         .collection('citas')
                         .snapshots(),
                     builder: (context, snapshot) {
-                      if (!snapshot.hasData)
+                      if (!snapshot.hasData) {
                         return const CircularProgressIndicator();
+                      }
                       final totalCitas = snapshot.data!.docs.length;
                       return Card(
                         child: ListTile(
@@ -77,11 +77,15 @@ class _DashboardPageState extends State<DashboardPage> {
                   StreamBuilder<QuerySnapshot>(
                     stream: FirebaseFirestore.instance
                         .collection('citas')
-                        .where('estado', isEqualTo: 'pendiente')
+                        .where(
+                          'fechaHora',
+                          isGreaterThan: DateTime.now(),
+                        ) // citas futuras
                         .snapshots(),
                     builder: (context, snapshot) {
-                      if (!snapshot.hasData)
+                      if (!snapshot.hasData) {
                         return const CircularProgressIndicator();
+                      }
                       final citasPendientes = snapshot.data!.docs.length;
                       return Card(
                         child: ListTile(
@@ -89,7 +93,7 @@ class _DashboardPageState extends State<DashboardPage> {
                             Icons.pending_actions,
                             color: Colors.orange,
                           ),
-                          title: const Text('Citas pendientes'),
+                          title: const Text('Próximas citas'),
                           trailing: Text(citasPendientes.toString()),
                         ),
                       );
@@ -103,8 +107,9 @@ class _DashboardPageState extends State<DashboardPage> {
                         .where('rol', isEqualTo: 'Paciente')
                         .snapshots(),
                     builder: (context, snapshot) {
-                      if (!snapshot.hasData)
+                      if (!snapshot.hasData) {
                         return const CircularProgressIndicator();
+                      }
                       final totalPacientes = snapshot.data!.docs.length;
                       return Card(
                         child: ListTile(
@@ -120,8 +125,28 @@ class _DashboardPageState extends State<DashboardPage> {
                   ),
                   const SizedBox(height: 24),
 
-                  // gráfico
-                  const CitasStatsChart(),
+                  //BOTÓN PARA GRÁFICAS
+                  ElevatedButton.icon(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const GraphicsPage()),
+                      );
+                    },
+                    icon: const Icon(Icons.bar_chart),
+                    label: const Text("Ver gráficas"),
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 20,
+                        vertical: 12,
+                      ),
+                      backgroundColor: Colors.blue,
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
