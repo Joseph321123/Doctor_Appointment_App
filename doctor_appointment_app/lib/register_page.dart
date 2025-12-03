@@ -116,7 +116,11 @@ class _RegisterPageState extends State<RegisterPage> {
                         ),
                       );
 
-                      Navigator.pop(context); // Regresar a login
+                      Navigator.pushNamedAndRemoveUntil(
+                        context,
+                        Routes.login,
+                        (route) => false,
+                      ); // Regresar a login
                     } on FirebaseAuthException catch (e) {
                       ScaffoldMessenger.of(
                         context,
